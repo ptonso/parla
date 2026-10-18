@@ -1,0 +1,81 @@
+# the project's private parla/ folder (a symlink into the asset root)
+/parla
+
+# background: template bookkeeping, the texfy migration and its private-path material
+.tmpl.toml
+migration/
+specs/delta/
+specs/logs/2026-06-30_docker-run-validation.md
+specs/logs/2026-10-14_agent-first-proposal.md
+specs/logs/2026-10-14_guides-port.md
+
+# --- tmpl managed (keep your own entries above this line) ---
+# tmpl / project data
+databank
+/tex
+tmpl-plan.toml
+runs
+
+# Syncthing
+.stfolder*
+.stfolder
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+venv-ckp/
+env/
+ENV/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.cache/
+.coverage
+htmlcov/
+.trash
+
+# Notebooks
+.ipynb_checkpoints/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Logs
+*.log
+logs/
+
+# Environment / secrets
+.env
+
+# AI agents
+.codex
+.claude
+.agents
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+# --- end tmpl managed ---

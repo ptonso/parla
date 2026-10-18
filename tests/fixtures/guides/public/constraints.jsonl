@@ -1,0 +1,1 @@
+{"id": "fig-ref-form", "kind": "regex", "description": "a figure is referenced as Figure~\\ref", "applies": {"engine": ["latex"]}, "regex": "\\bFig\\.~\\\\ref", "flags": "", "severity": "warning", "hint": true, "examples": {"match": ["see Fig.~\\ref{fig:a}"], "ok": ["see Figure~\\ref{fig:a}"]}, "evidence": [], "origin": "fixture", "status": "active", "date": "2026-10-18"}

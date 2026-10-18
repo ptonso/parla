@@ -1,0 +1,58 @@
+[
+  {
+    "id": "paper-intro",
+    "modality": "paper", "part": "introduction",
+    "request": "Write the introduction.",
+    "keys": ["shazeer2017moe", "fedus2022switch", "lepikhin2021gshard"],
+    "material": "Project: SparseRoute, a learned router for mixture-of-experts (MoE) inference.\n- Problem: MoE layers send each token to the top-k of E experts. At inference, load imbalance leaves some GPUs idle while others queue. Measured on a 64-expert model: the busiest expert gets 3.1x the mean load (ours, Sec. 4).\n- Closest work: Shazeer et al. introduced sparsely gated MoE [shazeer2017moe]. Switch Transformer simplified routing to top-1 [fedus2022switch]. GShard added a capacity limit and random dispatch [lepikhin2021gshard]. None of them adapts routing to the load seen at inference.\n- Prior routers are known to be unstable during training (no citation in the library yet).\n- Our contribution: (1) a router head trained with a load-balancing loss that is also applied at inference, (2) a drop-free dispatch scheme, (3) 1.4x higher throughput than GShard dispatch on 64 experts, at equal perplexity (Sec. 5).\n- Venue: peer-reviewed ML conference, 1 page for the introduction."
+  },
+  {
+    "id": "paper-intro-b",
+    "modality": "paper", "part": "introduction",
+    "request": "Write the introduction.",
+    "keys": ["he2016resnet", "dosovitskiy2021vit"],
+    "material": "Project: PatchGate, a token-dropping method for vision transformers.\n- Problem: ViT cost grows quadratically with the number of patch tokens [dosovitskiy2021vit]. Many tokens in background regions add little.\n- Our method scores each token with a 2-layer MLP and drops the lowest 40% before layer 4.\n- Results: on ImageNet-1k with a ViT-B, top-1 accuracy 81.9 vs 82.3 for the full model, and 1.5x fewer FLOPs. We only ran ViT-B and ImageNet-1k.\n- The author's notes say: 'we are the first to show token dropping works for vision transformers' (the author has not checked the literature for this).\n- ResNets [he2016resnet] have no such token structure, which is why this is specific to transformers.\n- Contributions: the scoring head, the drop schedule, the ImageNet-1k results."
+  },
+  {
+    "id": "paper-abstract",
+    "modality": "paper", "part": "abstract",
+    "request": "Write the abstract from the finished text.",
+    "keys": [],
+    "material": "Finished text of 'Rule Sets for Tabular Drift Detection'.\nIntroduction (summary): production models silently degrade when feature distributions drift. Statistical tests flag drift but give no account of which input region changed.\nMethod (summary): we fit a shallow decision tree on a drift label (reference vs current window) and read its leaves as axis-aligned rules that describe where the distributions differ. A stability filter keeps only rules that reappear in 8 of 10 bootstrap resamples.\nResults (summary): on 12 public tabular datasets with injected drift, the rules recover the drifted region with mean F1 0.74; a two-sample test baseline gives no region. On one real credit-scoring log, the rules named the two features an analyst later confirmed as the cause.\nDiscussion (summary): the method assumes the drift is axis-aligned; rotated drift is described by many small rules. We did not test on text or images.\nConclusion (summary): rule-based drift reports are a practical complement to tests."
+  },
+  {
+    "id": "paper-results",
+    "modality": "paper", "part": "results",
+    "request": "Write the results section for the main comparison.",
+    "keys": [],
+    "material": "Main comparison (Table~\\ref{tab:main}), mean F1 over 12 datasets, 5 seeds each:\n| Method | F1 | Regions found |\n| KS-test per feature | n/a | none |\n| Isolation forest | 0.52 | partial |\n| Ours (no stability filter) | 0.66 | yes |\n| Ours | 0.74 | yes |\nNotes: our best case is dataset 'adult' with F1 0.91, worst is 'covertype' with F1 0.48. The stability filter costs 9 seconds per run on average, versus under 1 second without it. Differences between 'Ours' and 'Ours (no stability filter)' were significant at p < 0.05 on 9 of 12 datasets."
+  },
+  {
+    "id": "cv-summary",
+    "modality": "cv", "part": "summary",
+    "request": "Write the summary.",
+    "keys": [],
+    "material": "Author: Mira Costa. Reinforcement learning engineer, 6 years of experience.\n- Lead RL engineer at Northwind Robotics (2022 to present): trained a PPO policy for bin picking, success rate 71% to 89% in simulation, deployed on 3 real arms.\n- Research engineer at Halden Labs (2019 to 2022): offline RL for warehouse routing, 12% fewer idle robot minutes against the heuristic baseline in a pilot.\n- Papers: 1 CoRL workshop paper (2021).\n- Stack: Python, PyTorch, Isaac Sim, ROS 2.\n- Seeking: a research engineering role in robot learning. No other preference given.\n- Target employer: AI research and development companies."
+  },
+  {
+    "id": "cv-summary-b",
+    "modality": "cv", "part": "summary",
+    "request": "Write the summary.",
+    "keys": [],
+    "material": "Author: Jonas Weber. Recently finished an MSc in computer science, 1 year of work experience.\n- Thesis: object detection for small defects on PCB images, YOLOv8 fine-tuned, mAP@50 0.78 vs 0.64 for the stock model, on 2,400 labeled images.\n- 8-month internship at Pixelfield GmbH: built the labeling and evaluation pipeline for the thesis dataset.\n- Open-source: a small repo for COCO evaluation scripts, 140 GitHub stars.\n- Languages: Python, C++.\n- Seeking: a computer vision research engineer role.\n- Target employer: AI research and development companies."
+  },
+  {
+    "id": "cv-experience",
+    "modality": "cv", "part": "experience",
+    "request": "Write the experience entry and its bullets for this role.",
+    "keys": [],
+    "material": "Role: Lead RL engineer, Northwind Robotics, Oslo. Mar 2022 to present.\n- Trained a PPO policy for bin picking in Isaac Sim; success rate 71% to 89% over 500 held-out scenes.\n- Deployed the policy on 3 real arms; real-world success rate not yet measured.\n- Wrote the domain randomization pipeline (lighting, object pose, friction); it cut the sim-to-real gap but the author has no number.\n- Mentored 2 junior engineers.\n- Reduced training time from 3 days to 11 hours by moving rollouts to 8 GPUs.\n- The team of 5 owns the whole manipulation stack; the author owned the policy and the training infrastructure."
+  },
+  {
+    "id": "cv-experience-b",
+    "modality": "cv", "part": "experience",
+    "request": "Write the experience entry and its bullets for this role.",
+    "keys": [],
+    "material": "Role: Research engineer, Halden Labs, Hamburg. Sep 2019 to Feb 2022.\n- Built an offline RL (CQL) system for warehouse routing from 4 months of logs, 2.1M transitions.\n- In a 6-week pilot on one warehouse, 12% fewer idle robot minutes than the heuristic baseline.\n- Co-authored a CoRL workshop paper (2021) on the routing results; the author wrote the experiments section.\n- Set up the team's experiment tracking; no measured effect.\n- Was responsible for weekly demos to the product team."
+  }
+]

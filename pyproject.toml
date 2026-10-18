@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parla"
+version = "0.0.1"
+description = "Agent-first tool for writing papers, slides, posts and diagrams in their final format, guided by the author's guides and corrections."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "ptonso" }]
+keywords = ["latex", "agent", "writing", "docker", "pdf"]
+dependencies = ["PyYAML>=6.0"]
+
+[project.scripts]
+parla = "parla.cli:main"
+
+[project.optional-dependencies]
+pdf = ["pymupdf>=1.24.0", "pymupdf4llm>=0.3.0"]
+svg = ["fonttools>=4.40"]
+dev = ["pytest>=7.4", "ruff>=0.6", "mypy>=1.7", "types-PyYAML"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+parla = ["docker/*", "data/*", "texmf/**/*", "assets/fonts/*", "guides/**/*.md", "guides/*.jsonl", "skills/parla/*.md", "py.typed"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q"
+markers = ["docker: needs a running Docker daemon"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+
+# Copied from texfy-ai with its typing; the copies are compared against the originals, not retyped.
+[[tool.mypy.overrides]]
+module = ["parla.tools.pdf.*", "parla.tools.sections", "parla.tools.table_parse", "parla.tools.table_fit", "parla.tools.table_render"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["fontTools.*"]
+ignore_missing_imports = true

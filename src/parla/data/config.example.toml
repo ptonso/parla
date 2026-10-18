@@ -1,0 +1,32 @@
+# parla user config.  `parla config init` copies this file to
+# ~/.config/parla/config.toml (or $PARLA_CONFIG); `parla config edit` opens it.
+#
+# Every key is optional.  With NOTHING set, parla keeps each project's parla/ folder inside the
+# project, builds references from parla/sources/bib/*.bib only, and keeps your guides and the
+# casebook under ~/.config/parla.  Uncomment what you need.
+
+# [storage]
+# # Keep each project's parla/ folder outside the project, so the project repository stays free of
+# # private writing.  `parla init` creates <asset_root>/<project folder name> and symlinks it into
+# # the project as parla/.  Add `parla` to the project's .gitignore.  Unset: parla/ is a real
+# # folder in the project.
+# asset_root = "~/parla-assets"
+#
+# # An extra TEXMF tree of your own packages, mounted read-only into the build container and
+# # searched after the project's parla/texmf/.
+# texmf_home = "~/texmf"
+#
+# # Better BibTeX auto-exports of a Zotero library.  When set, `parla build` resolves \cite keys
+# # against the library plus parla/sources/bib/ instead of parla/sources/bib/ alone.
+# library_bib  = "~/zotero/library.bib"
+# library_json = "~/zotero/library.json"
+
+# [guides]
+# private     = "~/.config/parla"   # holds your guides and the casebook (default: the config directory)
+# target_words   = 1000             # recommended size of one `parla guide show` output
+# tolerance      = 1.2              # `guide show` and `job start --topics` fail beyond target_words * tolerance
+# max_page_words = 350              # `guide lint` warns on a topic page over this
+# max_cases      = 8                # case hooks listed in one load
+# max_probes     = 20               # open probes the suite report lists at once
+# distill_min = 3                   # active cases on one topic and audience before `case lint` reports a group
+# # stale_days = 180                # unset: `case lint` makes no stale report

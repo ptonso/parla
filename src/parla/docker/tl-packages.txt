@@ -1,0 +1,11 @@
+appendixnumberbeamer
+latexdiff
+latexmk
+luatex85
+mwe
+standalone
+titlesec
+xurl
+ieeeconf
+ieeetran
+preview

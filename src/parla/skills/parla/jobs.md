@@ -32,6 +32,25 @@ A subagent cannot ask the author. The worker returns the questions it needs sett
 
 When the context grows too large, propose writing `.parla/jobs/<id>/notes.md` and continuing in a fresh worker. The notes hold what a continuing context needs: decisions, the steering so far and open threads.
 
+## Notice the end
+
+The author rarely says "done". Read these as signs that the job is over:
+
+- the last round left no open question, and the author approves it ("good", "perfect", "ok");
+- the author turns to another part, another artifact or an unrelated subject;
+- a substantial amount of work has landed and the feedback has thinned out;
+- the author asks to commit or export.
+
+Act on the sign by what the author's message holds:
+
+- **Your reply is probably the job's last.** Answer, then close your message with one line that suggests ending the job and reviewing its corrections.
+- **A short message that moves on**, such as "good, next". Before starting the next thing, suggest ending the job and reviewing its corrections.
+- **A substantial request unrelated to the job.** Before answering it, ask one AskUserQuestion with three options: the request is part of the same job; end the job now and review its corrections first; or end the job now and hold its review until the new request is settled.
+
+A held review waits for a quiet moment. While the author is still developing the new request, leave it pending and let the flow of ideas run. When the new work settles, such as an approval with no new request, propose the held review in one line at the end of your reply.
+
 ## Ending
 
-When the author is done, run `parla job end` and follow [learning.md](learning.md). A job ends with a green suite: every failure fixed and every probe answered. `job end` prints the suite's summary line last. When it shows a failure or an open probe, the job is not finished: resume the worker, or tell the author what remains and why.
+Run `parla job end <artifact>` and follow [learning.md](learning.md). A job ends with a green suite: every failure fixed and every probe answered. `job end` prints the suite's summary line last. When it shows a failure or an open probe, the job is not finished: resume the worker, or tell the author what remains and why.
+
+The snapshot of an ended job stays until the next job on the same artifact starts, so `parla job changes <artifact>` still serves a held review. When the next job is on the same artifact, save the output of `parla job changes <artifact>` to `.parla/jobs/<id>/changes.diff` before `job start`, and review from that file.

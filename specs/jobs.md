@@ -54,6 +54,10 @@ Creates the job folder and the snapshot.
 
 Writes `ended` into `job.toml` and prints the source files changed since the snapshot (never the build outputs), one per line, with `added`, `changed` or `removed`, then the verdicts of the job, one per line, with the key, the verdict and the evidence or reason, and the summary line of the suite over the lines the job changed. The snapshot stays until the artifact's next job starts. Fails when the artifact has no active job.
 
+### `parla job changes <artifact>`
+
+Prints a unified diff of every source file changed since the snapshot of the artifact's newest job, active or ended: `--- snapshot/<path>` against `+++ <path>`, relative to `parla/`. A file that is not UTF-8 text prints one line, `<status> <path> (binary)`. Build outputs stay out, as in `job end`. The captain reads the job's corrections from it at learning time, together with its memory of the author's feedback ([skill](skill.md#the-job-loop)). Fails when the artifact has no job or its snapshot is missing.
+
 ### `parla job revert <artifact>`
 
 Restores the artifact folder from the snapshot of the artifact's newest job, active or ended. Files in the snapshot are restored, and files created since are removed, except the build outputs, which stay. It prints the files it restored or removed. Fails when the artifact has no job.

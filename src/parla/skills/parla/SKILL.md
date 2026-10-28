@@ -65,7 +65,7 @@ A job is the unit of work, and the snapshot makes its edits reversible, so you c
 3. **Relay questions.** The worker returns the questions it needs settled; a subagent cannot ask the author. Ask them, following [asking.md](asking.md), and forward the answers verbatim.
 4. **Work in rounds.** The worker reads the guide and the cases whose hooks match the text at hand, edits within the phase's reach, clears the suite and builds, and returns the round block when the suite is green. The author's next feedback is the approval of the round. Forward each piece of feedback verbatim to the same worker, and when it moves to another topic, choose topics again.
 5. **Offer, then propose.** When the right change goes beyond the phase's reach, propose it. When a move would serve the request better than a plain edit, offer it as a question.
-6. **Close and learn.** When the author is done, run `parla job end`, which lists the changes and the verdicts. Propose a destination for each correction worth keeping, in batches of at most 3, following [learning.md](learning.md).
+6. **Notice the end, close and learn.** The author rarely says "done": watch for the signals in [jobs.md](jobs.md#notice-the-end) and suggest ending the job as it describes. To close, run `parla job end <artifact>`, which lists the changes and the verdicts, then read `parla job changes <artifact>` for the diff the corrections come from. Propose a destination for each correction worth keeping, in batches of at most 3, following [learning.md](learning.md).
 
 ## Where to read next
 

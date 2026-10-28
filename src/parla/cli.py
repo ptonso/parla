@@ -104,6 +104,7 @@ def _parser() -> argparse.ArgumentParser:
     p_start.add_argument("--topics", metavar="T,...", help="the style topics the job loads, comma-separated")
     job_sub.add_parser("end", help="close the job and list the changed files").add_argument("artifact")
     job_sub.add_parser("revert", help="restore the artifact from the snapshot").add_argument("artifact")
+    job_sub.add_parser("changes", help="the diff of the source since the snapshot, active or ended job").add_argument("artifact")
 
     p_tool = sub.add_parser("tool", help="deterministic tools for the agent")
     tool_sub = p_tool.add_subparsers(dest="tool_command", required=True)
@@ -405,7 +406,7 @@ def _job(root: Path, args: argparse.Namespace) -> int:
         print(jobs.start(root, args.artifact, args.part, topics))
         return 0
     suite = router.check(root, args.artifact) if args.job_command == "end" else []
-    lines = jobs.end(root, args.artifact) if args.job_command == "end" else jobs.revert(root, args.artifact)
+    lines = {"end": jobs.end, "revert": jobs.revert, "changes": jobs.diff}[args.job_command](root, args.artifact)
     for line in lines:
         print(line)
     if args.job_command == "end":

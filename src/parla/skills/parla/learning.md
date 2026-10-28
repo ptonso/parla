@@ -4,7 +4,7 @@ To learn is to propose, for each correction of a finished job that is worth keep
 
 ## Find the corrections worth keeping
 
-Read the job's rounds and its notes for corrections that recur, and for corrections that were reversed within the job, which show what the author really wanted. Read the verdicts `parla job end` printed too: a false positive answered `na` more than once points at a constraint to tighten. A single edit the author made for the sake of this artifact is a decision, and a correction about the way of writing is worth keeping.
+Run `parla job changes <artifact>`, or read the job's saved `changes.diff`: the diff against the snapshot holds the before and after of every correction, to copy as is. Read it with your memory of the rounds and the job's notes, which hold the author's reasons, the corrections that recur, and the corrections reversed within the job, which show what the author really wanted. Read the verdicts `parla job end` printed too: a false positive answered `na` more than once points at a constraint to tighten. A single edit the author made for the sake of this artifact is a decision, and a correction about the way of writing is worth keeping.
 
 ## Choose the destination
 

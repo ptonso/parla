@@ -3,6 +3,7 @@ diff baseline of every build in the job and the target of `revert`. See `specs/j
 
 from __future__ import annotations
 
+import difflib
 import json
 import shutil
 import tomllib
@@ -151,13 +152,34 @@ def end(root: Path, artifact: str, *, now: datetime | None = None) -> list[str]:
     return lines + verdict_lines(root, artifact)
 
 
-def revert(root: Path, artifact: str) -> list[str]:
+def _newest_snapshot(root: Path, artifact: str) -> Path:
     jobs = _jobs_of(root, artifact)
     if not jobs:
-        raise JobError(f"'{artifact}' has no job to revert")
+        raise JobError(f"'{artifact}' has no job")
     snapshot = jobs[-1] / "snapshot"
     if not snapshot.is_dir():
         raise JobError(f"the snapshot of job {jobs[-1].name} is missing")
+    return snapshot
+
+
+def diff(root: Path, artifact: str) -> list[str]:
+    """A unified diff of every source file changed since the snapshot of the artifact's newest job,
+    active or ended: the material the captain reads the job's corrections from."""
+    snapshot = _newest_snapshot(root, artifact)
+    lines: list[str] = []
+    for status, path in changes(root, artifact, snapshot):
+        try:
+            then = [] if status == "added" else (snapshot / path).read_text(encoding="utf-8").splitlines()
+            now = [] if status == "removed" else (root / PROJECT_DIR / path).read_text(encoding="utf-8").splitlines()
+        except UnicodeDecodeError:
+            lines.append(f"{status} {path} (binary)")
+            continue
+        lines += difflib.unified_diff(then, now, f"snapshot/{path}", path, lineterm="")
+    return lines
+
+
+def revert(root: Path, artifact: str) -> list[str]:
+    snapshot = _newest_snapshot(root, artifact)
     lines = [
         f"{'removed' if status == 'added' else 'restored'} {path}"
         for status, path in changes(root, artifact, snapshot)

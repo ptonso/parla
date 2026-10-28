@@ -13,3 +13,4 @@
 - [Translations of one artifact](2026-10-16_translations.md) - why languages live inside one artifact, and what the parity check compares.
 - [Lean prompts and a constraint suite](2026-10-18_lean-prompts.md) - why checkable rules leave the prompt and run as a test suite, why cases and topics become hooks, and why one worker per job.
 - [Public defaults, private preferences](2026-10-16_public-defaults.md) - why the package ships prose briefs per modality and the author's rules only append.
+- [Ending jobs and a soft guide cap](2026-10-28_ending-jobs-and-soft-cap.md) - why the skill describes a job's end, why `job changes` reads the snapshot diff, and why the guide cap only warns.

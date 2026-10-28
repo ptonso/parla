@@ -68,9 +68,9 @@ description: Write and revise papers, slides, posts and diagrams in a parla proj
    - returns the round block only when the suite is green.
    When the feedback moves to another topic, the captain reads the topic table again and sends the worker the new topics.
 5. **Offer a move** when one would help, following `moves.md`, and load it on acceptance with `guide show --move`.
-6. **Notice the end.** When the author turns to another part or artifact, propose ending the job and ask. When the job's context grows too large, propose writing job notes and continuing in a fresh worker, and ask.
+6. **Notice the end.** The author rarely says "done". The signs are an approval with no open question, a turn to another part, artifact or subject, a substantial amount of landed work with thinning feedback, and a request to commit or export. The captain acts by the author's message: when its own reply is probably the job's last, it closes the reply with one line suggesting the end; on a short message that moves on ("good, next"), it suggests the end before starting the next thing; on a substantial unrelated request, it asks before answering whether the request is part of the job, whether to end and review now, or whether to end now and hold the review. A held review waits until the new work settles, so a flow of ideas is never interrupted, and is then proposed in one line. When the job's context grows too large, propose writing job notes and continuing in a fresh worker, and ask.
 7. **End.** On "done", or when the author accepts ending:
-   - Run `parla job end`, which lists the changed files and the verdicts.
+   - Run `parla job end <artifact>`, which lists the changed files and the verdicts, and `parla job changes <artifact>`, the diff the corrections are read from ([jobs](jobs.md#parla-job-changes-artifact)). A held review on an artifact whose next job starts first saves that diff to the job folder before `job start`.
    - Propose a destination for each correction worth keeping, following `learning.md`: a case, a style principle or a constraint. Batches of at most 3, triaged with a toggle list and then phrased one question per case.
    - When `parla case lint` or `parla constraint lint` reports a group, mention it once; distill when the author asks, following `distilling.md`.
    - Answer with the end block.

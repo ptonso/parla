@@ -28,6 +28,7 @@ Commands that depend on the artifact's format (`check`, `build`, `export`, `init
 |  | `parla tool claims <artifact>` | each citation with its sentence and paragraph | [tools](tools.md#parla-tool-claims-artifact) |
 | Job | `parla job start <artifact>` | snapshot the artifact; the snapshot is the diff baseline | [jobs](jobs.md#parla-job-start-artifact---part-part---topics-t) |
 |  | `parla job end <artifact>` | close the job and list the changed files | [jobs](jobs.md#parla-job-end-artifact) |
+|  | `parla job changes <artifact>` | the diff of the source since the snapshot | [jobs](jobs.md#parla-job-changes-artifact) |
 |  | `parla job revert <artifact>` | restore the artifact from the snapshot | [jobs](jobs.md#parla-job-revert-artifact) |
 | Guide | `parla guide show <artifact> [part]` | the guides for what is about to be touched, as the model reads them; `--topics`, `--unformatted`, `--outline` | [guides](guides.md#parla-guide-show) |
 |  | `parla guide show --topic`, `--move`, `--procedure` | one page, merged | [guides](guides.md#parla-guide-show) |
@@ -80,8 +81,8 @@ Commands that depend on the artifact's format (`check`, `build`, `export`, `init
 Creates the `parla/` base layout, including `parla.toml` ([template](template.md#base-tree)).
 - **Local:** `parla/` is a real directory.
 - **External** (`[storage].asset_root`): the tree is written under `<asset_root>/<project folder name>`, and `parla/` is a symlink to it.
-- **Idempotent:** existing files are kept unless `--force`.
 - **`--local`:** forces local storage for this project even when `[storage].asset_root` is set, adopting an existing real `parla/` directory. A `parla/` symlink is an error.
+- **Idempotent:** existing files are kept unless `--force`.
 - **Skills.** Every skill shipped in the package is symlinked into `<project>/.claude/skills/<name>` and `<project>/.agents/skills/<name>`. A link to another target is repointed, and a real file or directory at that path is an error.
 
 ### `parla init artifact <name> --modality <m> [--audience <a>] [--force]`

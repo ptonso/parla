@@ -88,6 +88,25 @@ def test_revert_restores_changed_and_removed_files_and_deletes_added(tmp_path):
     assert jobs.changes(tmp_path, "p", tmp_path / "parla/.parla/jobs/20261014T153000Z/snapshot") == []
 
 
+def test_changes_diffs_the_source_against_the_snapshot_after_end(tmp_path):
+    art = _art(tmp_path)
+    with pytest.raises(jobs.JobError, match="no job"):
+        jobs.diff(tmp_path, "p")
+    jobs.start(tmp_path, "p", now=T1)
+    (art / "main.tex").write_text("two\n")
+    (art / "section/b.tex").write_text("B\n")
+    (art / "fig.png").write_bytes(b"\x89PNG\xff")
+    jobs.end(tmp_path, "p", now=T2)
+
+    lines = jobs.diff(tmp_path, "p")
+
+    assert "added artifacts/p/fig.png (binary)" in lines
+    assert lines[lines.index("--- snapshot/artifacts/p/main.tex"):][:5] == [
+        "--- snapshot/artifacts/p/main.tex", "+++ artifacts/p/main.tex", "@@ -1 +1 @@", "-one", "+two",
+    ]
+    assert "+B" in lines
+
+
 def test_revert_works_after_end_and_fails_without_a_job(tmp_path):
     art = _art(tmp_path)
     with pytest.raises(jobs.JobError, match="no job"):

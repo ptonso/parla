@@ -203,7 +203,7 @@ def test_outline_names_each_element_with_its_words_and_files(project):
     assert lines[-1].startswith("$")
 
 
-def test_over_the_target_warns_and_over_the_tolerance_fails(project, capsys):
+def test_over_the_target_warns_and_over_the_tolerance_asks_to_distill(project, capsys):
     _artifact(project)
     total = show.budget(project, "icra-paper", "introduction", ["positioning"])[2]
     cfg = project.parent / "cfg/config.toml"
@@ -212,8 +212,8 @@ def test_over_the_target_warns_and_over_the_tolerance_fails(project, capsys):
     assert "pos-paper" not in out and "the paper positions against three named works" in out
     assert "over the target" in capsys.readouterr().err
     cfg.write_text("[guides]\ntarget_words = 5\n")
-    with pytest.raises(pages.GuideError, match="over the limit of 6"):
-        show.show(project, "icra-paper", "introduction", topics=["positioning"])
+    assert show.show(project, "icra-paper", "introduction", topics=["positioning"]) == out
+    assert "over the limit of 6" in (err := capsys.readouterr().err) and "distill" in err
 
 
 def test_show_page_prints_one_merged_page(project):
@@ -545,19 +545,17 @@ def test_the_topic_table_lists_words_and_hooks_and_the_budget_footer(project):
     assert any(line.endswith("| a passage that places the paper against prior work") for line in lines)
     with_artifact = show.topic_table(project, "icra-paper", "introduction")
     footer = [line for line in with_artifact if line.startswith("system ")]
-    assert footer and "target 1000 | tolerance 1200 | left for topics" in footer[0]
+    assert footer and "target 1500 | tolerance 1800 | left for topics" in footer[0]
     assert with_artifact[-1] == "topics of this part: positioning, contributions"
     assert cli.main(["guide", "list", "topic", "--artifact", "icra-paper", "--part", "introduction"]) == 0
 
 
-def test_job_start_fails_over_the_tolerance_and_stores_the_topics(project, capsys):
+def test_job_start_warns_over_the_tolerance_and_stores_the_topics(project, capsys):
     _artifact(project)
     (project.parent / "cfg/config.toml").write_text("[guides]\ntarget_words = 5\n")
-    assert cli.main(["job", "start", "icra-paper", "--part", "introduction", "--topics", "positioning"]) == 3
-    assert "over the limit" in capsys.readouterr().err
-    (project.parent / "cfg/config.toml").write_text("")
     assert cli.main(["job", "start", "icra-paper", "--part", "introduction", "--topics", "positioning,ghost"]) == 3
     assert cli.main(["job", "start", "icra-paper", "--part", "introduction", "--topics", "positioning"]) == 0
+    assert "over the limit" in capsys.readouterr().err
     assert jobs.active_topics(project, "icra-paper") == ["positioning"]
 
 

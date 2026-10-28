@@ -122,8 +122,8 @@ library_json = "~/zotero/library.json"
 
 [guides]
 private      = "~/.config/parla"   # default; holds the user's guides and the casebook
-target_words = 1000                # recommended size of one `guide show` output
-tolerance    = 1.2                 # `guide show` and `job start --topics` fail beyond target_words * tolerance
+target_words = 1500                # recommended size of one `guide show` output
+tolerance    = 1.2                 # `guide show` and `job start --topics` warn to distill beyond target_words * tolerance
 max_page_words = 350               # `guide lint` warns on a topic page over this
 max_cases    = 8                   # case hooks listed in one load
 max_probes   = 20                  # open probes the suite report lists at once

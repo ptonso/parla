@@ -293,12 +293,13 @@ def _with(load: Load, topics: list[str]) -> Load:
 
 
 def enforce(total: int, system: int, per_topic: dict[str, int]) -> None:
-    """Warns on standard error above the target and fails above target times tolerance."""
+    """Warns on standard error above the target, and above target times tolerance asks for distilling.
+    The cap is soft: it lints the long-term memory and never blocks a job."""
     target, limit = config_mod.guides_target_words(), config_mod.guides_limit_words()
     detail = ", ".join([f"system {system}", *(f"{t} {w}" for t, w in per_topic.items())])
     if total > limit:
-        raise pages.GuideError(f"the guide is {total} words, over the limit of {limit} (target {target}): {detail}")
-    if total > target:
+        print(f"{NAME}: the guide is {total} words, over the limit of {limit} (target {target}): {detail}; distill or trim the guides", file=sys.stderr)
+    elif total > target:
         print(f"{NAME}: the guide is {total} words, over the target of {target}: {detail}", file=sys.stderr)
 
 

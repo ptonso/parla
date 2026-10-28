@@ -31,7 +31,7 @@ def test_missing_file_means_local_storage(monkeypatch, tmp_path):
     assert config.library_bib() is None
     assert config.texmf_home() is None
     assert config.guides_private() == tmp_path
-    assert (config.guides_target_words(), config.guides_tolerance(), config.guides_limit_words()) == (1000, 1.2, 1200)
+    assert (config.guides_target_words(), config.guides_tolerance(), config.guides_limit_words()) == (1500, 1.2, 1800)
     assert config.guides_stale_days() is None
 
 

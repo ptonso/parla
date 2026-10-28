@@ -45,7 +45,7 @@ parla/.parla/jobs/<id>/
 
 Creates the job folder and the snapshot.
 - Fails when the artifact has an active job.
-- `--topics` names topics of the guides ([guides](guides.md#topic-page)) and is stored in `job.toml`. It fails on an unknown topic, on a topic that does not apply to the artifact's modality ([guides](guides.md#topic-page)), and fails when the system part and the topics together exceed the target times the tolerance of `[guides]`, listing the words of each topic.
+- `--topics` names topics of the guides ([guides](guides.md#topic-page)) and is stored in `job.toml`. It fails on an unknown topic, on a topic that does not apply to the artifact's modality ([guides](guides.md#topic-page)), and warns when the system part and the topics together exceed the target times the tolerance of `[guides]`, listing the words of each topic ([guides](guides.md#budget)).
 - The snapshot copies the artifact folder, including `table/` and the translation folders, and dereferences symlinks, so the snapshot holds content and not links. The build outputs (`<slug>.pdf`, `<slug>_diff.pdf`, `<slug>.png`, `<slug>_diff.png`, where the slug is the artifact name or `<artifact>-<code>`, `BUILD-ERROR.txt` and the generated `references.bib`) are generated files and stay out of it, out of the change list, and survive a revert.
 - It removes the snapshot of the artifact's previous job. Only the last snapshot of an artifact is kept. Briefs and notes of earlier jobs stay.
 - It prints the job id.
@@ -86,7 +86,7 @@ The author moves the phase forward, or back when new results reopen the structur
 - `job revert` MUST leave the artifact folder identical to the snapshot, apart from the build outputs.
 - `parla` MUST NOT read `brief.md` or `notes.md`.
 - `check --resolve` MUST fail without an active job.
-- `job start --topics` MUST fail on an unknown topic or over the tolerance.
+- `job start --topics` MUST fail on an unknown topic, and MUST warn without failing over the tolerance.
 - Only the last snapshot of an artifact MUST remain on disk.
 
 ## History
@@ -94,3 +94,4 @@ The author moves the phase forward, or back when new results reopen the structur
 - [Jobs and the snapshot diff](logs/2026-10-14_jobs.md): why a job owns the diff baseline, and why the subagent edits directly.
 - [Lean prompts and a constraint suite](logs/2026-10-18_lean-prompts.md): topics in the job, verdicts, and one worker per job.
 - [Translations of one artifact](logs/2026-10-16_translations.md): per-language outputs, snapshot and measure.
+- [Ending jobs and a soft guide cap](logs/2026-10-28_ending-jobs-and-soft-cap.md): the signs of a job's end, `job changes`, and the warning cap.

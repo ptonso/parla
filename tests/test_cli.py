@@ -40,7 +40,7 @@ def test_config_path_init_and_show(monkeypatch, tmp_path, capsys):
 
     assert cli.main(["config", "show"]) == 0
     out = capsys.readouterr().out
-    assert "guides.target_words" in out and "1000" in out
+    assert "guides.target_words" in out and "1500" in out
 
 
 def test_init_creates_the_tree_and_links_the_skills(tmp_path, capsys):

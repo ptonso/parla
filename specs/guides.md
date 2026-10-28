@@ -6,7 +6,7 @@ Related: **Read first** [architecture](architecture.md), [config](config.md). **
 
 Guides are the memory of how an artifact is written, in two layers. The **defaults** ship in the package: for each modality, a prose brief that says what the artifact is, who reads it and what each part does, and for each topic a hook and a short craft note, so a fresh install writes well with no configuration. The **preferences** are the author's own rules, kept in the author's private root and in the artifact's card: the idiosyncrasies of how this author likes the modality. Preferences append to the defaults and win over them. Guides carry craft, which is a matter of degree. What a reviewer can answer yes or no lives in [constraints](constraints.md) and runs as a test suite.
 
-The agent never reads guide files directly. `parla guide show` prints one document for the part about to be touched, in the form the model reads: XML blocks, rules as plain bullets, no ids and no origin tags. It stays around 1000 words because the captain of the job picks the topics: `parla guide list topic` prints each topic with its hook and its size, and the captain chooses the ones the job needs. Cases appear as one-line hooks that the agent opens on demand. `--unformatted` prints what the files contain, with ids and origins, for humans and for distillation.
+The agent never reads guide files directly. `parla guide show` prints one document for the part about to be touched, in the form the model reads: XML blocks, rules as plain bullets, no ids and no origin tags. It stays around 1500 words because the captain of the job picks the topics: `parla guide list topic` prints each topic with its hook and its size, and the captain chooses the ones the job needs. Cases appear as one-line hooks that the agent opens on demand. `--unformatted` prints what the files contain, with ids and origins, for humans and for distillation.
 
 What is specific to guides is the page kinds. A **modality** page holds the default brief of one kind of artifact and its parts table. A **topic** page holds a hook, the default craft note and the author's rules on one subject wherever it appears. An **audience** page sets the limits and starters of one readership and holds the author's overrides for it. Traits, moves, procedures and engines ship as short prose and take the author's additions.
 
@@ -24,7 +24,7 @@ Walk-through: the captain of `icra-paper` runs `parla guide list topic --artifac
 - **Procedure**: a recipe for a recurring task, such as grounding citations.
 - **Limits**: the budget an audience sets per modality.
 - **Hook**: one line that says when a topic or a case applies, so the agent can choose without reading the body.
-- **Target, tolerance**: the recommended size of one `guide show` output in words, and the multiple of it beyond which the command fails.
+- **Target, tolerance**: the recommended size of one `guide show` output in words, and the multiple of it beyond which the command warns that the guides need distilling. The cap is soft: it lints the long-term memory and never blocks a job.
 - **System part**: everything `guide show` prints except the topics.
 
 ## Map
@@ -179,7 +179,7 @@ Open the cases that apply with `parla case show <ids>`.
 - Only prose and `## principles` sections print. Sections named `check` do not print.
 - `--unformatted` prints the Markdown form of the files instead: a header line with the word count, the target and the number of cases, a heading per section with its origin, rules as `- [id] text`, the cases in full, and a `--- overridden` line per removed rule. Humans read it, and the agent reads it to find rule ids.
 - `--outline` prints the header and then one line per element of the default view, in its order: the element (`<topic name="flow">`), its words and the files its text comes from, written `$private/<path in the private root>`, `$package/<path in the installed package>` or `$project/<path in the project>`; a topic whose two files share a path reads `{$package,$private}/guides/topic/flow.md`. The `<watch>` and `<case-hooks>` lines add the ids behind them. A last line gives the roots in use. It prints no bodies and is the quickest way to find the file behind a line of the prompt.
-- A load counts its words on the form it prints. Above `[guides].target_words` a warning goes to standard error. Above the target times `[guides].tolerance` the command fails and lists the words of each block and each topic.
+- A load counts its words on the form it prints. Above `[guides].target_words` a warning goes to standard error. Above the target times `[guides].tolerance` the warning lists the words of each block and each topic and asks to distill or trim the guides; the command still prints the guide.
 
 ### `parla guide list [kind]`
 
@@ -188,7 +188,7 @@ Prints the page key of every page of both roots, one per line, such as `move/com
 `parla guide list topic [--artifact <a> [--part <p>]]` prints one line per topic, `name | words | hook`, where the words are those of the merged topic as `guide show` prints it. With an artifact it lists only the topics that apply to its modality. Without one, a limited topic ends with `| applies to <modalities>`. With an artifact it ends with a footer that gives the arithmetic of the budget:
 
 ```
-system 520 words | target 1000 | tolerance 1200 | left for topics 480
+system 520 words | target 1500 | tolerance 1800 | left for topics 980
 topics of this part: contributions, flow, claims, citations, terminology
 ```
 
@@ -233,7 +233,7 @@ Prints findings in the [finding format](checks.md#finding). It reports:
 
 ### Budget
 
-`[guides].target_words` (1000), `[guides].tolerance` (1.2), `[guides].max_page_words` (350) and `[guides].max_cases` (8) ([config](config.md#user-config)) size one load. The target is the recommended output of `guide show`, split roughly in half between the system part and the topics. A job that picks topics up to the target is on budget, and the tolerance absorbs a small excess. There is no limit on the number of topics, because topics differ in size.
+`[guides].target_words` (1500), `[guides].tolerance` (1.2), `[guides].max_page_words` (350) and `[guides].max_cases` (8) ([config](config.md#user-config)) size one load. The target is the recommended output of `guide show`, split roughly in half between the system part and the topics. A job that picks topics up to the target is on budget, and the tolerance absorbs a small excess. Past the tolerance, `guide show` and `job start` warn and `guide lint` reports `guide-over-budget`: a cue to distill cases into rules or trim pages, never a block on the day's work. There is no limit on the number of topics, because topics differ in size.
 
 ## Constraints
 
@@ -245,10 +245,10 @@ Prints findings in the [finding format](checks.md#finding). It reports:
 - `guide show` MUST print the same sections in the same order for the same inputs.
 - `guide show --unformatted` MUST tag every section with its origin.
 - `guide show` MUST NOT print a rule id, an origin, or a section named `check` in its default form.
-- `guide show` MUST fail when the output exceeds the target times the tolerance.
+- `guide show` MUST warn, and MUST NOT fail, when the output exceeds the target times the tolerance.
 - Package guide files MUST NOT be written by any command.
 - `guide add` MUST fail on a duplicate id and MUST NOT overwrite a rule.
-- A load MUST NOT drop a section silently. The failure over the tolerance lists every block and topic with its words.
+- A load MUST NOT drop a section silently. The warning over the tolerance lists every block and topic with its words.
 - `guide drop` and `guide edit` MUST NOT write a public page, MUST fail on an unknown id, and MUST record the previous text in the history.
 - `guide edit` MUST keep the rule id.
 - A topic MUST have a hook in one root.

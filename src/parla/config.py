@@ -118,11 +118,11 @@ def guides_target_words() -> int:
     """`[guides].target_words` - the recommended size of one `guide show` output."""
     if settings.has_key("guides", "max_words"):
         raise ConfigError(f"[guides].max_words was removed; set [guides].target_words (see `{NAME} config init`)")
-    return settings.opt_int("guides", "target_words") or 1000
+    return settings.opt_int("guides", "target_words") or 1500
 
 
 def guides_tolerance() -> float:
-    """`[guides].tolerance` - the multiple of the target beyond which a load fails."""
+    """`[guides].tolerance` - the multiple of the target beyond which a load warns that the guides need distilling."""
     return settings.opt_float("guides", "tolerance") or 1.2
 
 

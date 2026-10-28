@@ -12,7 +12,7 @@ Commands that depend on the artifact's format (`check`, `build`, `export`, `init
 
 | Group | Command | Does | Spec |
 |---|---|---|---|
-| Project | `parla init` | create the `parla/` tree and link the skills | [cli](#parla-init---force) |
+| Project | `parla init` | create the `parla/` tree and link the skills | [cli](#parla-init---force---local) |
 |  | `parla init artifact <name>` | add an artifact: its card and the engine's starter files | [cli](#parla-init-artifact-name---modality-m---audience-a---force) |
 |  | `parla link` | sync the `sources/` symlinks from `[links]` | [cli](#parla-link) |
 |  | `parla config {path,init,edit,show}` | find, create, edit or print the user config | [cli](#parla-config-pathiniteditshow) |
@@ -75,12 +75,13 @@ Commands that depend on the artifact's format (`check`, `build`, `export`, `init
 
 ## Contracts
 
-### `parla init [--force]`
+### `parla init [--force] [--local]`
 
 Creates the `parla/` base layout, including `parla.toml` ([template](template.md#base-tree)).
 - **Local:** `parla/` is a real directory.
 - **External** (`[storage].asset_root`): the tree is written under `<asset_root>/<project folder name>`, and `parla/` is a symlink to it.
 - **Idempotent:** existing files are kept unless `--force`.
+- **`--local`:** forces local storage for this project even when `[storage].asset_root` is set, adopting an existing real `parla/` directory. A `parla/` symlink is an error.
 - **Skills.** Every skill shipped in the package is symlinked into `<project>/.claude/skills/<name>` and `<project>/.agents/skills/<name>`. A link to another target is repointed, and a real file or directory at that path is an error.
 
 ### `parla init artifact <name> --modality <m> [--audience <a>] [--force]`

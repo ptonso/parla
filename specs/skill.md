@@ -8,7 +8,7 @@ The `parla` skill is how a coding agent uses the tool. It holds no writing princ
 
 It follows the patterns of `create-skills`: a thin `SKILL.md` that opens with context and routes through one registry, supporting pages for each situation, a few strict rules in one place, fixed return blocks, and a design log the agent never reads.
 
-The skill ships in the package at `parla/skills/parla/`. `parla init` links it into the project for Claude Code and opencode ([cli](cli.md#parla-init---force)).
+The skill ships in the package at `parla/skills/parla/`. `parla init` links it into the project for Claude Code and opencode ([cli](cli.md#parla-init---force---local)).
 
 Walk-through: the author types `/parla icra-paper results`. The skill is the captain: it reads the card, runs `parla guide list topic --artifact icra-paper --part results`, and picks `tables,figures,claims` from the hooks and sizes. It runs `job start --part results --topics tables,figures,claims` and launches one worker with a brief. The worker runs `guide show icra-paper results`, opens the case hooks that apply with `case show`, and returns two questions. The captain asks the author and forwards the answers. The worker edits the source, runs `build`, fixes the failures the suite lists, resolves each probe with evidence, and returns the round block when the suite is green. The author gives feedback, which goes to the same worker. When the author is done, the captain runs `job end`, proposes the cases and constraints that the corrections justify, and the author accepts or declines each.
 

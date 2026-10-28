@@ -35,6 +35,7 @@ The starter templates depend only on base LaTeX and the packaged Layer 2: the pa
 ### Storage modes
 
 - **Local** (default): `<root>/parla` is a real directory. A pre-existing `parla/` symlink is an error, since it implies an `asset_root` that is not configured.
+- **Local by flag:** `parla init --local` selects Local even when `[storage].asset_root` is set, so a project can keep its `parla/` in place.
 - **External** (`[storage].asset_root`):
   - The tree is written under `<asset_root>/<project folder name>`. A project in `~/work/paper` maps to `<asset_root>/paper`.
   - `<root>/parla` is a symlink to that directory.

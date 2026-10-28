@@ -161,21 +161,21 @@ def parla_dir(root: Path) -> Path:
     return root / PROJECT_DIR
 
 
-def _ensure_parla_link(root: Path) -> Path:
+def _ensure_parla_link(root: Path, local: bool) -> Path:
     """Provision `<root>/parla` and return the path the base tree is written to.
 
-    Local storage (no `[storage].asset_root`): `parla/` is a real directory in the project.
+    Local storage (no `[storage].asset_root`, or `local`): `parla/` is a real directory in the project.
     External storage: `parla/` is a symlink to `<asset_root>/<project folder name>`; a
     pre-existing real `parla/` directory, a symlink pointing elsewhere, or an existing target
     that `parla/` does not link to is a fatal error.
     """
     parla_link = root / PROJECT_DIR
-    assets = config_mod.asset_root()
+    assets = None if local else config_mod.asset_root()
 
     if assets is None:
         if parla_link.is_symlink():
             raise config_mod.ConfigError(
-                f"{parla_link} is a symlink but no [storage].asset_root is configured. "
+                f"{parla_link} is a symlink but storage is local (no [storage].asset_root, or --local). "
                 f"Remove it, or set [storage].asset_root (`{NAME} config init`)."
             )
         parla_link.mkdir(parents=True, exist_ok=True)
@@ -212,14 +212,15 @@ def _ensure_parla_link(root: Path) -> Path:
     return target
 
 
-def init(root: Path, force: bool = False) -> list[Path]:
+def init(root: Path, force: bool = False, local: bool = False) -> list[Path]:
     """Create the base parla/ tree for `root`, stored under an external asset target and
-    symlinked in as `<root>/parla`. Idempotent; --force overwrites files.
+    symlinked in as `<root>/parla`; `local` keeps `parla/` a real directory despite a configured
+    asset root. Idempotent; --force overwrites files.
 
     Returns the list of files written (created or, with force, overwritten).
     """
     root = root.resolve()
-    base = _ensure_parla_link(root)
+    base = _ensure_parla_link(root, local)
     for rel in DIRS:
         (base / rel).mkdir(parents=True, exist_ok=True)
 

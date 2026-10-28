@@ -40,7 +40,7 @@ def test_local_init_rejects_a_pre_existing_symlink(monkeypatch, tmp_path):
     proj.mkdir()
     (proj / "parla").symlink_to(tmp_path)
 
-    with pytest.raises(config.ConfigError, match="symlink but no .storage..asset_root"):
+    with pytest.raises(config.ConfigError, match="symlink but storage is local"):
         template.init(proj)
 
 
@@ -74,6 +74,17 @@ def test_external_init_rejects_a_real_dir_a_wrong_symlink_and_a_shared_name(monk
     (asset / "p").mkdir(parents=True)
     with pytest.raises(config.ConfigError, match="does not link to it"):
         template.init(proj)
+
+
+def test_local_flag_adopts_a_real_dir_despite_an_asset_root(monkeypatch, tmp_path):
+    proj = tmp_path / "p"
+    (proj / "parla").mkdir(parents=True)
+    monkeypatch.setattr(config, "asset_root", lambda: tmp_path / "asset")
+
+    written = template.init(proj, local=True)
+
+    assert (proj / "parla" / "parla.toml") in written
+    assert not (proj / "parla").is_symlink() and not (tmp_path / "asset").exists()
 
 
 CARD = """\

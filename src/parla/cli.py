@@ -54,6 +54,7 @@ def _parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     p_init.add_argument("--force", action="store_true", help="overwrite template files")
+    p_init.add_argument("--local", action="store_true", help=f"keep {PROJECT_DIR}/ a real directory even when [storage].asset_root is set")
     init_sub = p_init.add_subparsers(dest="init_target")
     p_art = init_sub.add_parser("artifact", help="add an artifact: its card and the engine's starter files")
     p_art.add_argument("name")
@@ -214,7 +215,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "init":
             if args.init_target == "artifact":
                 return _init_artifact(config_mod.find_root(cwd), args)
-            return _init(cwd, args.force)
+            return _init(cwd, args.force, args.local)
         if args.command == "config":
             return _config(args.action, args.force)
         if args.command == "image":
@@ -266,8 +267,8 @@ def main(argv: list[str] | None = None) -> int:
         return EXIT_OTHER
 
 
-def _init(root: Path, force: bool) -> int:
-    written = template.init(root, force=force)
+def _init(root: Path, force: bool, local: bool) -> int:
+    written = template.init(root, force=force, local=local)
     template.link_skills(root)
     base = root / PROJECT_DIR
     verb = "linked at" if base.is_symlink() else "created at"

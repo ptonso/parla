@@ -55,6 +55,7 @@ def _new_page(key: str, hook: str | None) -> str:
 
 
 def _target(root: Path, key: str, hook: str | None = None) -> Path:
+    key = key if "/" in key or key == "general" else f"topic/{key}"
     kind = key.partition("/")[0]
     path = pages.page_path(pages.roots()["private"], key)
     if path.is_file():

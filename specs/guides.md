@@ -196,7 +196,7 @@ topics of this part: contributions, flow, claims, citations, terminology
 
 ### `parla guide add <page> <rule-id> --text <text> [--origin <text>] [--overrides <rule-id>] [--evidence <case-ids>] [--card <artifact>] [--hook <text>]`
 
-Writes a rule to the private page, creating the page with its frontmatter when it does not exist. A topic page created this way needs `--hook` unless a public page of the same key exists. The rule goes under the page section `--section` names, `principles` by default; an audience page keeps its rules under a topic section. A modality or audience page that exists nowhere is not created, since its frontmatter carries required keys. With `--card`, it writes to the card's `## rules` instead. `--evidence` names cases: their ids go into the origin, and the cases are marked `distilled`. Fails on a duplicate id.
+Writes a rule to the private page, creating the page with its frontmatter when it does not exist. A page without a kind prefix is a topic: `deck` means `topic/deck`. A topic page created this way needs `--hook` unless a public page of the same key exists. The rule goes under the page section `--section` names, `principles` by default; an audience page keeps its rules under a topic section. A modality or audience page that exists nowhere is not created, since its frontmatter carries required keys. With `--card`, it writes to the card's `## rules` instead. `--evidence` names cases: their ids go into the origin, and the cases are marked `distilled`. Fails on a duplicate id.
 
 ### `parla guide move <rule-id> <page>`
 

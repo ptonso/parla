@@ -238,6 +238,7 @@ def test_add_creates_a_private_page_and_refuses_a_duplicate(project):
         edit.add(project, "topic/new-topic", "pos-gap", "again")
     with pytest.raises(pages.GuideError, match="needs its frontmatter"):
         edit.add(project, "modality/ghost", "m-one", "x")
+    assert edit.add(project, "new-topic", "nt-two", "a bare name is a topic") == path
 
 
 def test_add_to_an_audience_section_and_the_card(project):

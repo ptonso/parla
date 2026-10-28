@@ -140,7 +140,7 @@ def _parser() -> argparse.ArgumentParser:
     for kind in ("topic", "move", "procedure"):
         p_show.add_argument(f"--{kind}", metavar=kind.upper(), help=f"print one {kind} page, merged")
     p_add = guide_sub.add_parser("add", help="write a rule to the private root or a card")
-    p_add.add_argument("page")
+    p_add.add_argument("page", help="a page key such as topic/flow or audience/default; a bare name is a topic")
     p_add.add_argument("rule_id")
     p_add.add_argument("--text", required=True)
     p_add.add_argument("--origin")

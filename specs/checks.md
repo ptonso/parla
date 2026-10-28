@@ -51,7 +51,7 @@ Shared by every engine:
 | Id | Severity | Reports |
 |---|---|---|
 | `card-invalid` | error | a missing or invalid card key ([config](config.md#the-card)) |
-| `source-missing` | error | a path under `sources/` that the artifact names and that does not exist |
+| `source-missing` | error | a path under `sources/` that an artifact text file names and that does not exist; build outputs such as `BUILD-ERROR.txt` are not scanned |
 
 ### LaTeX engine
 

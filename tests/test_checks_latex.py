@@ -119,6 +119,8 @@ def test_source_missing_scans_every_artifact_text_file_but_not_comments_or_the_c
     card = root / "parla/artifacts/paper/card.md"
     card.write_text(card.read_text() + "\nmentions sources/in/card.png\n")
     assert _only(root, "source-missing") == [("artifacts/paper/notes.md", 1)]
+    (root / "parla/artifacts/paper/BUILD-ERROR.txt").write_text("sources/ghost.png does not exist\n")
+    assert _only(root, "source-missing") == [("artifacts/paper/notes.md", 1)]
     (root / "parla/sources/results").mkdir()
     (root / "parla/sources/results/x.csv").write_text("a")
     assert _only(root, "source-missing") == []

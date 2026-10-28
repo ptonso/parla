@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 from .. import config as config_mod
-from ..names import PROJECT_DIR
+from ..names import PROJECT_DIR, is_output
 from .finding import Finding
 from .ids import finding
 
@@ -30,10 +30,12 @@ def card_invalid(root: Path, artifact: str) -> Finding | None:
 
 
 def artifact_files(root: Path, artifact: str) -> list[Path]:
+    """The text sources of an artifact; build outputs such as `BUILD-ERROR.txt` are not sources."""
     base = root / PROJECT_DIR / "artifacts" / artifact
     return [
         p for p in sorted(base.rglob("*"))
         if p.is_file() and p.suffix in TEXT_SUFFIXES and p.name not in SKIPPED_FILES
+        and not is_output(p.relative_to(root / PROJECT_DIR))
     ]
 
 

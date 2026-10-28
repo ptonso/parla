@@ -37,6 +37,8 @@ _BIBLIOGRAPHY_RE = re.compile(r"\\bibliography\{([^}]+)\}")
 _ADDBIBRESOURCE_RE = re.compile(r"\\addbibresource\{([^}]+)\}")
 _PACKAGE_RE = re.compile(r"\\usepackage(?:\[[^\]]*\])?\{([^}]+)\}")
 _DOCUMENTCLASS_RE = re.compile(r"\\documentclass(?:\[[^\]]*\])?\{([^}]+)\}")
+# Beamer's \use<kind>theme{X} loads beamer<kind>themeX.sty.
+_THEME_RE = re.compile(r"\\use(color|font|inner|outer)?theme(?:\[[^\]]*\])?\{([^}]+)\}")
 
 
 @dataclass
@@ -71,6 +73,14 @@ def _layer2_index() -> dict[str, Path]:
             if p.is_file() and p.suffix in {".tex", ".sty", ".cls"}:
                 index[p.name] = p
     return index
+
+
+def _theme_packages(text: str) -> list[str]:
+    return [
+        f"beamer{m.group(1) or ''}theme{name.strip()}"
+        for m in _THEME_RE.finditer(text)
+        for name in m.group(2).split(",")
+    ]
 
 
 def _strip_comments(text: str) -> str:
@@ -145,6 +155,7 @@ def trace_dependencies(root: Path, doc: Document, texmf: str) -> Manifest:
         for m in (*_PACKAGE_RE.finditer(text), *_DOCUMENTCLASS_RE.finditer(text)):
             for name in m.group(1).split(","):
                 packages_seen.add(name.strip())
+        packages_seen.update(_theme_packages(text))
 
     manifest.figures = list(dict.fromkeys(manifest.figures))
     manifest.bib_files = list(dict.fromkeys(manifest.bib_files))
@@ -178,16 +189,16 @@ def _add_personal_texmf_deps(project_texmf: Path, manifest: Manifest, layer2: di
     ]
     while pending:
         text = _strip_comments(pending.pop().read_text(encoding="utf-8"))
-        for m in _SHARED_REF_RE.finditer(text):
-            for name in m.group(1).split(","):
-                name = name.strip()
-                for candidate in (name, f"{name}.sty", f"{name}.cls", f"{name}.tex"):
-                    src = layer2.get(candidate)
-                    if src is not None and Path(candidate) not in manifest.shared_files:
-                        manifest.shared_files[Path(candidate)] = src
-                        if not src.resolve().is_relative_to(packaged):
-                            pending.append(src)
-                        break
+        refs = [n for m in _SHARED_REF_RE.finditer(text) for n in m.group(1).split(",")]
+        for name in (*refs, *_theme_packages(text)):
+            name = name.strip()
+            for candidate in (name, f"{name}.sty", f"{name}.cls", f"{name}.tex"):
+                src = layer2.get(candidate)
+                if src is not None and Path(candidate) not in manifest.shared_files:
+                    manifest.shared_files[Path(candidate)] = src
+                    if not src.resolve().is_relative_to(packaged):
+                        pending.append(src)
+                    break
 
 
 def _utcnow() -> datetime:

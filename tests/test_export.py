@@ -204,6 +204,28 @@ def test_export_resolves_usepackage_from_layer2(tmp_path: Path, monkeypatch: pyt
     )
 
 
+def test_export_resolves_usetheme_from_user_texmf(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = _project(tmp_path)
+    _stub_layer2(monkeypatch, tmp_path)
+    user_dir = tmp_path / "user-texmf" / "tex" / "latex"
+    user_dir.mkdir(parents=True)
+    (user_dir / "beamerthemeScience.sty").write_text(
+        "\\ProvidesPackage{beamerthemeScience}\n\\usefonttheme{Fancy}\n", encoding="utf-8"
+    )
+    (user_dir / "beamerfontthemeFancy.sty").write_text("\\ProvidesPackage{beamerfontthemeFancy}\n", encoding="utf-8")
+    monkeypatch.setattr(export.config_mod, "texmf_home", lambda: tmp_path / "user-texmf")
+    _main(root).write_text(
+        "\\documentclass{beamer}\n\\usetheme[x]{Science}\n\\begin{document}\\end{document}\n",
+        encoding="utf-8",
+    )
+    cfg = _config()
+
+    out_dir = export.export_document(root, cfg, "paper", "v1", force=False)
+
+    assert (out_dir / "beamerthemeScience.sty").is_file()
+    assert (out_dir / "beamerfontthemeFancy.sty").is_file()
+
+
 def test_export_layer2_fallback_requires_bare_filename(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

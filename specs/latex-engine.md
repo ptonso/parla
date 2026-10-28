@@ -106,10 +106,10 @@ The baseline holds `artifacts/<artifact>/<entrypoint>` and may be a job snapshot
   - `\input`, `\include` and `\DiagramSlide`;
   - `\includegraphics` and the `\LeftImage`/`\RightImage`/`\TopImage`/`\BottomImage` family;
   - `\bibliography` and `\addbibresource`;
-  - `\usepackage` and `\documentclass`, as metadata only.
+  - `\usepackage`, `\documentclass` and Beamer's `\use[color|font|inner|outer]theme` (resolved to `beamer<kind>theme<Name>.sty`), as metadata and for the shared-file lookup.
 
   The list of path-taking commands is shared with the checks. Paths stay relative to `parla/`, so no source rewriting is needed.
-- **Fallback for bare names.** A bare `\input`/`\include`/`\usepackage` target not found under `parla/` falls back to the packaged Layer 2 tree, then to `[storage].texmf_home`, mirroring kpathsea order. Matches are copied as-is to the export root and listed under `bundled_shared_files` in `tex-config.yaml`.
+- **Fallback for bare names.** A bare `\input`/`\include`/`\usepackage`/`\usetheme` target not found under `parla/` falls back to the packaged Layer 2 tree, then to `[storage].texmf_home`, mirroring kpathsea order. Matches are copied as-is to the export root and listed under `bundled_shared_files` in `tex-config.yaml`.
 - **No links in the snapshot.** Every copy dereferences symlinks, so the snapshot holds real files, never links into external storage.
 - **Whole folders.** `parla/<paths.texmf>/` is copied wholesale, along with the published PDF.
 - **`latexmkrc`.** When `parla/<paths.texmf>/` is copied, a `latexmkrc` is written at the export root that recursively extends `TEXINPUTS` over it. A receiving latexmk-driven compiler such as Overleaf has no built-in way to discover a project-local texmf TDS tree, so without this file anything living under `texmf/` (for example `project.sty`) fails to resolve there even though the export holds it.
